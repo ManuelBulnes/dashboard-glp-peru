@@ -3,7 +3,12 @@ import streamlit as st
 from pathlib import Path
 import numpy as np
 
-DATA_PATH = Path("dataset_final_glp.parquet")
+# ── RUTA DEL DATASET ─────────────────────────────
+# Obtiene la raíz del proyecto automáticamente
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Ruta al parquet dentro de /data
+DATA_PATH = BASE_DIR / "data" / "dataset_final_glp.parquet"
 
 @st.cache_data(show_spinner=False)
 def cargar_datos():
@@ -24,13 +29,30 @@ def cargar_datos():
     - Se agrega feature engineering básico
     """
 
-    if DATA_PATH.exists():
-        df = pd.read_parquet(DATA_PATH)
+    try:
 
-        # ── FEATURE ENGINEERING ─────────────────────
-        # 🆕 Transformación para análisis más robusto
-        df["precio_log"] = np.log(df["precio_de_venta_(soles)"].replace(0, np.nan)).fillna(0)
+        if DATA_PATH.exists():
 
-        return df
+            # ── LECTURA PARQUET ─────────────────────
+            df = pd.read_parquet(DATA_PATH)
 
-    return pd.DataFrame()
+            # ── FEATURE ENGINEERING ─────────────────
+            # 🆕 Transformación para análisis más robusto
+            df["precio_log"] = np.log(
+                df["precio_de_venta_(soles)"]
+                .replace(0, np.nan)
+            ).fillna(0)
+
+            print(f"✅ Dataset cargado correctamente: {len(df)} registros")
+
+            return df
+
+        else:
+            print(f"❌ Archivo no encontrado: {DATA_PATH}")
+            return pd.DataFrame()
+
+    except Exception as e:
+
+        print(f"❌ Error cargando parquet: {e}")
+
+        return pd.DataFrame()

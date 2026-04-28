@@ -41,7 +41,6 @@ if faltantes:
     st.stop()
 
 # ── FIX NUMÉRICOS (🔥 IMPORTANTE)
-# ── FIX NUMÉRICOS (🔥 IMPORTANTE)
 columnas_numericas = [
     "precio_de_venta_(soles)",
     "indice_demanda",
