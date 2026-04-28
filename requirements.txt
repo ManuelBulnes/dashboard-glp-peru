@@ -1,0 +1,15 @@
+---
+
+# requirements.txt
+
+```txt
+streamlit
+pandas
+numpy
+plotly
+pyarrow
+scikit-learn
+requests
+jupyter
+openpyxl
+fastparquet
