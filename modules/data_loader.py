@@ -5,8 +5,7 @@ import numpy as np
 import requests
 
 # ── BASE DEL PROYECTO ──────────────────────────
-# Asegura que la ruta base apunte a la carpeta raíz del proyecto
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parents[1]
 
 # ── PARQUET ────────────────────────────────────
 DATA_PATH = BASE_DIR / "data" / "dataset_final_glp.parquet"
@@ -22,22 +21,36 @@ def cargar_datos():
     
     1. Intenta API Flask local
     2. Si falla → usa parquet
+    
+    📌 NEGOCIO:
+    Permite:
+    - simulación ETL/API local
+    - deploy web en Streamlit Cloud
+    
+    📌 TÉCNICO:
+    Arquitectura híbrida resiliente
     """
 
     # =================================================
     # 1. INTENTO API LOCAL
     # =================================================
     try:
+
         st.info("📡 Intentando conexión con API local...")
+
         response = requests.get(API_URL, timeout=5)
 
         if response.status_code == 200:
+
             data = response.json()
+
             df = pd.DataFrame(data)
+
             st.success(f"✅ Datos cargados desde API LOCAL ({len(df)} registros)")
 
             # ── FEATURE ENGINEERING ─────────────────
             if "precio_de_venta_(soles)" in df.columns:
+
                 df["precio_log"] = np.log(
                     pd.to_numeric(
                         df["precio_de_venta_(soles)"],
@@ -54,17 +67,22 @@ def cargar_datos():
     # 2. FALLBACK → PARQUET
     # =================================================
     try:
+
         st.info(f"📂 Buscando parquet en:\n{DATA_PATH}")
 
         if not DATA_PATH.exists():
-            st.error(f"❌ No existe el archivo en:\n{DATA_PATH}")
+
+            st.error(f"❌ No existe:\n{DATA_PATH}")
+
             return pd.DataFrame()
 
         df = pd.read_parquet(DATA_PATH)
+
         st.success(f"✅ Dataset parquet cargado ({len(df)} registros)")
 
         # ── FEATURE ENGINEERING ─────────────────
         if "precio_de_venta_(soles)" in df.columns:
+
             df["precio_log"] = np.log(
                 pd.to_numeric(
                     df["precio_de_venta_(soles)"],
@@ -75,5 +93,7 @@ def cargar_datos():
         return df
 
     except Exception as e:
+
         st.error(f"❌ Error cargando parquet:\n{e}")
+
         return pd.DataFrame()
