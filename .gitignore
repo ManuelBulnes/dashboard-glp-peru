@@ -27,7 +27,7 @@ data/*.json
 
 # ⚠️ IMPORTANTE:
 # NO ignorar parquet procesado
-!data/*.parquet
+#!data/*.parquet
 
 # =================================================
 # STREAMLIT
