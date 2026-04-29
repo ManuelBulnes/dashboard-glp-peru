@@ -168,7 +168,7 @@ with tab3:
     st.subheader("📊 Análisis de Mercado")
     df_plot = df_f.sample(5000, random_state=42).copy() if len(df_f) > 5000 else df_f.copy()
     
-    # 🔥 FIX: evitar saturación de colores
+    # FIX: evitar saturación de colores
     top_n = 5
     top_productos_scatter = df_plot["producto"].value_counts().head(top_n).index
     df_plot["grupo_producto"] = df_plot["producto"].apply(

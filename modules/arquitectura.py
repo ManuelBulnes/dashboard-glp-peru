@@ -1,5 +1,5 @@
 arquitectura = """
-🧠 ARQUITECTURA FINAL v3 — Plataforma Analítica GLP Perú
+🧠 ARQUITECTURA FINAL — Plataforma Analítica GLP Perú
 ============================================================================
 
 📌 ENFOQUE GENERAL
@@ -12,7 +12,7 @@ Arquitectura modular orientada a:
 ✔ Separación de responsabilidades
 ✔ Compatibilidad LOCAL + WEB
 ✔ Integración ETL + Dashboard
-✔ Preparada para analítica empresarial ligera
+✔ Analítica empresarial ligera
 
 La solución integra:
 
@@ -47,7 +47,7 @@ PROYECTO_GLP/
 │
 ├── 📂 modules/
 │   ├── data_loader.py
-│   │   → Carga híbrida API/parquet
+│   │   → Carga híbrida parquet
 │   │
 │   ├── filters.py
 │   │   → Aplicación de filtros dinámicos
@@ -68,20 +68,21 @@ PROYECTO_GLP/
 │       → Documentación de arquitectura
 │
 ├── 📂 notebooks/
-│   ├── etl_pipeline.ipynb
+│   ├── costos_Peru_ver06.ipynb
 │   │   → Pipeline ETL completo
 │   │
 │   ├── servidor_api.py
 │   │   → API REST local simulada (Flask)
 │   │
 │   ├── *.xlsx
-│   │   → Archivos Excel auxiliares
+│   │   → Archivos auxiliares
 │   │
-│   └── otros notebooks de análisis
+│   └── notebooks de análisis
 │
 └── (Futuro)
     ├── config/
-    └── assets/
+    ├── assets/
+    └── models/
 
 ============================================================================
 🔁 FLUJO GENERAL DEL SISTEMA
@@ -137,7 +138,7 @@ Permite desacoplar la fuente de datos del dashboard.
 ----------------------------------------------------------------------------
 
 Ubicación:
-→ notebooks/etl_pipeline.ipynb
+→ notebooks/costos_Peru_ver06.ipynb
 
 ============================================================================
 2.1 EXTRACT — INGESTA
@@ -157,7 +158,21 @@ LIBRERÍAS:
 Automatiza la captura de información energética.
 
 ============================================================================
-2.2 AUDITORÍA DE CALIDAD
+2.2 INYECCIÓN CONTROLADA DE ERRORES
+----------------------------------------------------------------------------
+
+✔ Inserción de valores nulos
+✔ Inserción de precios negativos
+✔ Inserción de outliers extremos
+
+📌 OBJETIVO:
+Simular corrupción de datos para validar reglas de calidad.
+
+📌 RESULTADO:
+Permite demostrar robustez del pipeline ETL.
+
+============================================================================
+2.3 AUDITORÍA DE CALIDAD DE DATOS
 ----------------------------------------------------------------------------
 
 Métricas implementadas:
@@ -175,7 +190,7 @@ Detectar corrupción y problemas en el dataset.
 Datos confiables para análisis estratégico.
 
 ============================================================================
-2.3 LIMPIEZA E IMPUTACIÓN
+2.4 LIMPIEZA E IMPUTACIÓN
 ----------------------------------------------------------------------------
 
 PROCESOS:
@@ -195,7 +210,7 @@ TECNOLOGÍAS:
 Garantiza calidad mínima para análisis.
 
 ============================================================================
-2.4 DETECCIÓN DE OUTLIERS
+2.5 DETECCIÓN DE OUTLIERS
 ----------------------------------------------------------------------------
 
 ✔ Método IQR
@@ -206,7 +221,7 @@ Garantiza calidad mínima para análisis.
 Permite identificar posibles sobreprecios.
 
 ============================================================================
-2.5 FEATURE ENGINEERING
+2.6 FEATURE ENGINEERING
 ----------------------------------------------------------------------------
 
 Variables generadas:
@@ -223,7 +238,7 @@ Variables generadas:
 Mejora el análisis estratégico y predictivo.
 
 ============================================================================
-2.6 INTEGRACIÓN DE FUENTES
+2.7 INTEGRACIÓN DE FUENTES
 ----------------------------------------------------------------------------
 
 ✔ Cruce con dataset maestro
@@ -234,7 +249,7 @@ Mejora el análisis estratégico y predictivo.
 Dataset enriquecido para inteligencia de negocio.
 
 ============================================================================
-2.7 LOAD — ALMACENAMIENTO
+2.8 LOAD — ALMACENAMIENTO
 ----------------------------------------------------------------------------
 
 FORMATO:
@@ -265,29 +280,28 @@ FUNCIÓN PRINCIPAL:
 🔄 ARQUITECTURA HÍBRIDA
 ----------------------------------------------------------------------------
 
-El sistema implementa carga dual:
+El sistema implementa carga optimizada desde archivo Parquet:
 
-1. LOCAL
-   → Consumo API Flask
-
-2. WEB / STREAMLIT CLOUD
-   → Fallback automático a parquet
+✔ Lectura eficiente
+✔ Cache de datos
+✔ Normalización automática
+✔ Conversión robusta de tipos
 
 ============================================================================
 FLUJO DE CARGA
 ----------------------------------------------------------------------------
 
-1. Intento conexión API local
-2. Si falla:
-      → lectura parquet
-3. Aplicación de feature engineering
-4. Cache de datos
+1. Verificación de existencia del parquet
+2. Lectura optimizada
+3. Normalización de columnas
+4. Conversión de tipos numéricos
+5. Creación de precio_log
+6. Cache de datos
 
 ============================================================================
 TECNOLOGÍAS
 ----------------------------------------------------------------------------
 
-✔ requests
 ✔ pandas
 ✔ pathlib
 ✔ numpy
@@ -297,10 +311,10 @@ TECNOLOGÍAS
 📌 BENEFICIOS
 ----------------------------------------------------------------------------
 
-✔ Compatible con desarrollo local
-✔ Compatible con despliegue web
-✔ Alta resiliencia
-✔ Evita dependencia obligatoria de Flask
+✔ Alta velocidad de lectura
+✔ Compatibilidad local y cloud
+✔ Menor consumo de memoria
+✔ Mayor estabilidad del dashboard
 
 ============================================================================
 🎛️ CAPA 4 — FILTROS DINÁMICOS
@@ -374,6 +388,9 @@ GRÁFICOS IMPLEMENTADOS:
 
 7. 📊 Scatter Plot
    → Relación precio vs demanda
+
+8. 🔥 Heatmap
+   → Correlación entre variables
 
 TECNOLOGÍAS:
 ✔ Plotly Express
@@ -453,7 +470,8 @@ TABS:
 ✔ Prevención división por cero
 ✔ Downcasting
 ✔ Reducción saturación visual
-✔ Carga híbrida resiliente
+✔ Lectura optimizada parquet
+✔ Conversión robusta de tipos
 
 ============================================================================
 🌐 COMPATIBILIDAD DE ENTORNOS
@@ -482,6 +500,7 @@ TABS:
 ✔ Predicción de precios
 ✔ Clustering
 ✔ Mapas geográficos
+✔ Integración con APIs reales
 
 ============================================================================
 🎯 CONCLUSIÓN
@@ -494,6 +513,7 @@ La arquitectura implementada permite:
 ✔ Integración ETL + BI
 ✔ Compatibilidad local y cloud
 ✔ Análisis estratégico automatizado
+✔ Escalabilidad futura
 
 El proyecto evoluciona de un dashboard tradicional a:
 
