@@ -17,11 +17,28 @@ def cargar_datos():
 
     try:
 
+        st.write("📂 Ruta:", DATA_PATH)
+
         if not DATA_PATH.exists():
 
             st.error(f"❌ No existe:\n{DATA_PATH}")
 
             return pd.DataFrame()
+
+        df = pd.read_parquet(DATA_PATH)
+
+        df.columns = [
+            c.strip().lower().replace(" ", "_")
+            for c in df.columns
+        ]
+
+        return df
+
+    except Exception as e:
+
+        st.error(f"❌ Error cargando parquet:\n{e}")
+
+        return pd.DataFrame()
 
         # LOAD
         df = pd.read_parquet(DATA_PATH)
@@ -61,4 +78,5 @@ def cargar_datos():
         return df
 
     except Exception as e:
+        st.error(f"❌ Error cargando parquet: {e}")
         return pd.DataFrame()
