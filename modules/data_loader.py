@@ -3,56 +3,39 @@ import streamlit as st
 from pathlib import Path
 import numpy as np
 
-# ── RUTA DEL DATASET ─────────────────────────────
-# Obtiene la raíz del proyecto automáticamente
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Ruta al parquet dentro de /data
 DATA_PATH = BASE_DIR / "data" / "dataset_final_glp.parquet"
 
 @st.cache_data(show_spinner=False)
 def cargar_datos():
-    """
-    Carga el dataset desde parquet.
-
-    📌 NEGOCIO:
-    Se usa parquet porque permite:
-    - Mejor rendimiento
-    - Menor tamaño
-    - Compatible con pipelines ETL
-
-    📌 TÉCNICO:
-    - Si no existe el archivo → devuelve DataFrame vacío
-    - Se implementa CACHE para mejorar rendimiento
-
-    🆕 MEJORA:
-    - Se agrega feature engineering básico
-    """
 
     try:
 
-        if DATA_PATH.exists():
+        st.write("📂 Ruta:", DATA_PATH)
 
-            # ── LECTURA PARQUET ─────────────────────
-            df = pd.read_parquet(DATA_PATH)
+        if not DATA_PATH.exists():
+            st.error(f"❌ Archivo no encontrado:\n{DATA_PATH}")
+            return pd.DataFrame()
 
-            # ── FEATURE ENGINEERING ─────────────────
-            # 🆕 Transformación para análisis más robusto
+        df = pd.read_parquet(DATA_PATH)
+
+        df.columns = [
+            c.strip().lower().replace(" ", "_")
+            for c in df.columns
+        ]
+
+        if "precio_de_venta_(soles)" in df.columns:
             df["precio_log"] = np.log(
                 df["precio_de_venta_(soles)"]
                 .replace(0, np.nan)
             ).fillna(0)
 
-            print(f"✅ Dataset cargado correctamente: {len(df)} registros")
+        st.success(f"✅ Dataset cargado: {len(df):,} registros")
 
-            return df
-
-        else:
-            print(f"❌ Archivo no encontrado: {DATA_PATH}")
-            return pd.DataFrame()
+        return df
 
     except Exception as e:
 
-        print(f"❌ Error cargando parquet: {e}")
+        st.error(f"❌ Error cargando parquet:\n{e}")
 
         return pd.DataFrame()
