@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import time
 
 from modules.data_loader import cargar_datos
 from modules.filters import aplicar_filtros
@@ -20,7 +21,7 @@ def load_data():
     return cargar_datos()
 
 # ── LOAD ─────────────────────────
-with st.spinner("⏳ Cargando datos..."):
+with st.spinner("⏳ Inicializando dashboard..."):
     df = load_data()
 
 if df.empty:
@@ -40,7 +41,7 @@ if faltantes:
     st.error(f"❌ Faltan columnas: {faltantes}")
     st.stop()
 
-# ── FIX NUMÉRICOS (🔥 IMPORTANTE)
+# ── FIX NUMÉRICOS 
 columnas_numericas = [
     "precio_de_venta_(soles)",
     "indice_demanda",
@@ -51,10 +52,10 @@ columnas_numericas = [
 for col in columnas_numericas:
     df[col] = pd.to_numeric(df[col], errors="coerce")
 
-# 🔥 FIX CRÍTICO: eliminar nulos en columnas clave
+# FIX CRÍTICO: eliminar nulos en columnas clave
 df = df.dropna(subset=["precio_de_venta_(soles)", "indice_demanda"])
 
-st.success(f"✅ {len(df)} registros cargados correctamente")
+#st.success(f"✅ {len(df)} registros cargados correctamente")
 
 # ── SIDEBAR ──────────────────────
 with st.sidebar:
@@ -104,7 +105,7 @@ if len(df_f) < len(df):
 st.title("⛽ Dashboard GLP Perú")
 st.divider()
 
-# ── KPI SAFE FUNCTION (🔥)
+# ── KPI SAFE FUNCTION
 def safe(val):
     return 0 if pd.isna(val) else val
 
@@ -207,7 +208,7 @@ with tab3:
         }
     )
 
-    # 🔥 MEJORAS VISUALES
+    # MEJORAS VISUALES
     fig_scatter.update_traces(
         marker=dict(
             size=11,          # tamaño círculos
@@ -248,7 +249,7 @@ with tab3:
             markers=True
         )
 
-        fig_line.update_traces(line=dict(width=3))  # 🔥 línea más gruesa
+        fig_line.update_traces(line=dict(width=3))  # línea más gruesa
 
         st.plotly_chart(fig_line, use_container_width=True)
 
@@ -263,7 +264,7 @@ with tab3:
     points="outliers"
     )
 
-    # 🔥 aumentar tamaño de puntos
+    # aumentar tamaño de puntos
     fig_box.update_traces(
         marker=dict(
             size=9,

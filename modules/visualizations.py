@@ -65,11 +65,15 @@ def grafico_radar(valores, producto):
                 visible=True,
                 range=[0, 1],
 
-                # 🔥 NÚMEROS MÁS GRANDES
-                tickfont=dict(size=16),
+                # NÚMEROS MÁS GRANDES
+                tickfont=dict(size=16, color="black"),
+                
 
-                # 🔥 GRID MÁS VISIBLE
-                gridwidth=2
+                # GRID MÁS VISIBLE
+                gridcolor="gray",
+                gridwidth=2,
+                # LÍNEA DEL EJE
+                linecolor="black"
             ),
 
             angularaxis=dict(
@@ -77,10 +81,10 @@ def grafico_radar(valores, producto):
             )
         ),
 
-        # 🔥 MÁS ESPACIO
+        # MÁS ESPACIO
         height=700,
 
-        # 🔥 LETRAS MÁS GRANDES
+        # LETRAS MÁS GRANDES
         font=dict(size=15),
 
         showlegend=False

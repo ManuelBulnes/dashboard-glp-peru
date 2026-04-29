@@ -14,6 +14,6 @@ def normalizar(valor, min_val, max_val):
         return 0
 
     if max_val == min_val:
-        return 0  # 🔥 evita división por cero
+        return 0  # evita división por cero
 
     return max(0, min(1, (valor - min_val) / (max_val - min_val)))
